@@ -1,0 +1,30 @@
+<!--
+
+  This launch file loads an empty world and places a PR2 robot in
+  it. An additional piece of furniture, a cooking table with drawers,
+  is spawed in front of the robot. The additionally loaded map
+  material suggests the area in which the robot can act, i.e. where it
+  can drive to. A semantic map file is loaded as well to give names to
+  the semantic components such as the table and it's drawers.
+
+-->
+
+<launch>
+  <!-- Launch an empty Gazebo world with a simulated PR2 robot in it. -->
+  <include file="$(find pr2_gazebo)/launch/pr2_empty_world.launch" />
+  
+  <!-- Spawn the cooking table in front of the robot. -->
+  <include file="$(find lesson01)/launch/popcorn_table.launch" />
+
+  <!-- Spawn objects such as mugs, etc. -->
+  <include file="$(find lesson01)/launch/spawn_objects.launch" />
+
+  <!-- Load collision map and semantic map -->
+  <node name="json_prolog" pkg="json_prolog" type="json_prolog">
+    <param name="initial_package" value="lesson01" />
+  </node>
+  
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find lesson01)/map/map.yaml" />
+  
+  <include file="$(find lesson01)/launch/fake_localization.launch" />
+</launch>

@@ -1,0 +1,7 @@
+<launch>
+  <param name="mug_description" textfile="$(find lesson01)/models/mug/mug.urdf" />
+  <node name="spawn_mug_1" pkg="gazebo" type="spawn_model"
+        args="-urdf -param mug_description -x 1.48 -y 0.4 -z 0.9 -model mug_1" />
+  <node name="spawn_mug_2" pkg="gazebo" type="spawn_model"
+        args="-urdf -param mug_description -x 1.48 -y -0.4 -z 0.9 -model mug_2" />
+</launch>

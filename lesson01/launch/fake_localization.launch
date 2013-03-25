@@ -1,0 +1,10 @@
+<launch>
+
+<node name="pr2_fake_localization" type="fake_localization" pkg="fake_localization">
+    <rosparam>
+      base_frame_id: base_footprint
+      odom_frame_id: odom_combined
+    </rosparam>
+  </node>
+
+</launch>

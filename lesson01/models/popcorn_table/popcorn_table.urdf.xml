@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<robot name="popcorn_table">
+
+<include filename="$(find unihb_lab)/defs/util_defs.xml"/>
+
+
+  <link name="popcorn_table_link">
+    <sphere_inertia radius="0.001" mass="1"/>
+  </link>
+
+  
+  <!--              -->
+  <!-- Handle Macro -->
+  <!--              -->
+  
+  <macro name="handle" params="parent name pos_x pos_y pos_z roll pitch yaw size_x size_y size_z material">
+
+    <joint name="${parent}_${name}_joint" type="fixed">
+      <origin rpy="${roll} ${pitch} ${yaw}" xyz="${pos_x} ${pos_y} ${pos_z}"/>
+      <parent link="${parent}_link"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+      
+      <cuboid_inertia width="${size_x - 0.005}" length="${size_y - 0.005}" height="${size_z - 0.005}" mass="0.1"/>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.005} ${size_y - 0.005} ${size_z - 0.005}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x} ${size_y} ${size_z}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <gazebo reference="${name}_link">
+      <material value="${material}" />
+    </gazebo>
+    
+
+  </macro>
+
+  <!--              -->
+  <!-- Drawer Macro -->
+  <!--              -->
+
+  <macro name="drawer" params="parent name pos_x pos_y pos_z roll pitch yaw size_x size_y size_z material">
+    
+    <joint name="${parent}_${name}_fixed_joint" type="fixed">
+      <origin rpy="${roll} ${pitch} ${yaw}" xyz="${pos_x} ${pos_y} ${pos_z+size_z/2}"/>
+      <parent link="${parent}_link"/>
+      <child link="${name}_fixed_link"/>
+    </joint>
+
+    <link name="${name}_fixed_link">
+      <sphere_inertia radius="0.001" mass="1"/>
+    </link>
+
+    <joint name="${parent}_${name}_joint" type="prismatic">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="${name}_fixed_link"/>
+      <child link="${name}_link"/>
+      <axis xyz="0.999 0 0.044"/><!-- the axis needs to be slightly tilted so that the drawers would stay closed in Gazebo-->
+      <limit lower="0" upper="0.48" effort="300" velocity="10"/>
+    </joint>
+
+    <gazebo reference="${parent}_${name}_joint">
+      <erp>0.8</erp>
+      <cfm>0.0000001</cfm>
+      <stopKp>1000000.0</stopKp>
+      <stopKd>1.0</stopKd>
+    </gazebo>
+
+    <link name="${name}_link">
+
+      <cuboid_inertia width="0.017" length="${size_y}" height="${size_z}" mass="1.0"/>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.017 ${size_y} ${size_z}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.017 ${size_y} ${size_z}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${name}_link">
+      <material value="${material}" />
+    </gazebo>
+    
+    <joint name="${name}_left_fixed_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_left_link"/>
+    </joint>
+
+    <link name="${name}_left_link">
+      
+      <cuboid_inertia width="${size_x - 0.012 - 0.017}" length="0.012" height="${size_z - 0.035}" mass="1.0" />
+
+      <visual>
+        <origin xyz="${-size_x/2 + 0.0085} ${-size_y/2 + 0.005 + 0.006} -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.012 - 0.017} 0.012 ${size_z - 0.035}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${-size_x/2 + 0.0085} ${-size_y/2 + 0.005 + 0.006} -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.012 - 0.017} 0.012 ${size_z - 0.035}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${name}_left_link">
+      <material value="${material}" />
+    </gazebo>
+    
+    <joint name="${name}_right_fixed_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_right_link"/>
+    </joint>
+
+    <link name="${name}_right_link">
+      
+      <cuboid_inertia width="${size_x - 0.012 - 0.017}" length="0.012" height="${size_z - 0.035}" mass="1.0" />
+      
+      <visual>
+        <origin xyz="${-size_x/2 + 0.0085} ${size_y/2 - 0.005 - 0.006} -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.012 - 0.017} 0.012 ${size_z - 0.035}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${-size_x/2 + 0.0085} ${size_y/2 - 0.005 - 0.006} -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.012 - 0.017} 0.012 ${size_z - 0.035}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${name}_right_link">
+      <material value="${material}" />
+    </gazebo>
+    
+    <joint name="${name}_back_fixed_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_back_link"/>
+    </joint>
+    
+    <link name="${name}_back_link">
+      
+      <cuboid_inertia width="0.012" length="${size_y - 0.01}" height="${size_z - 0.035}" mass="1.0" />
+
+      <visual>
+        <origin xyz="${-size_x + 0.012 + 0.017} 0 -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.012 ${size_y - 0.01 - 0.024} ${size_z - 0.035}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="${-size_x + 0.012 + 0.017} 0 -0.01" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.012 ${size_y - 0.01 - 0.024} ${size_z - 0.035}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${name}_back_link">
+      <material value="${material}" />
+    </gazebo>
+    
+    <joint name="${name}_bottom_fixed_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_bottom_link"/>
+    </joint>
+    
+    <link name="${name}_bottom_link">
+
+      <cuboid_inertia width="${size_x - 0.017 - 0.012}" length="${size_y - 0.01 - 0.024}" height="0.012" mass="1.0" />
+
+      <visual>
+        <origin xyz="${-size_x/2 + 0.017} 0 ${-size_z/2 + 0.006 + 0.0175 - 0.01}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.017 - 0.012} ${size_y - 0.01 - 0.024} 0.012"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="${-size_x/2 + 0.017} 0 ${-size_z/2 + 0.006 + 0.0175 - 0.01}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x - 0.017 - 0.012} ${size_y - 0.01 - 0.024} 0.012"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <gazebo reference="${name}_bottom_link">
+      <material value="${material}" />
+    </gazebo>
+    
+    <handle
+      name="handle_${name}"
+      parent="${name}"
+      roll="0" pitch="0" yaw="0"
+      pos_x="0.0385"
+      pos_y="0"
+      pos_z="0"
+      size_x="0.015"
+      size_y="0.13"
+      size_z="0.015"
+      material="Gazebo/Grey" />
+  </macro>
+  
+  
+  
+  
+  <!-- Quick macro for tableparts -->
+  <macro name="tablepart" params="parent name pos_x pos_y pos_z size_x size_y size_z rpy material">
+
+    <joint name="${name}_joint" type="fixed">
+      <origin rpy="${rpy}" xyz="${pos_x} ${pos_y} ${pos_z+size_z/2}"/>
+      <parent link="${parent}_link"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+      
+      <cuboid_inertia width="${size_x}" length="${size_y}" height="${size_z}" mass="10"/>
+      
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x} ${size_y} ${size_z}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${size_x} ${size_y} ${size_z}"/>
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${name}_link">
+      <material>${material}</material>
+    </gazebo>
+  </macro>
+
+  <tablepart parent="popcorn_table" name="tabletop" pos_x="0" pos_y="0" pos_z="0.873" size_x="0.64" size_y="1.75" size_z="0.027" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="leg_front_left" pos_x="-0.265" pos_y="0.78" pos_z="0" size_x="0.06" size_y="0.06" size_z="0.873" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="leg_front_right" pos_x="-0.265" pos_y="-0.78" pos_z="0" size_x="0.06" size_y="0.06" size_z="0.873" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="leg_back_left" pos_x="0.275" pos_y="0.78" pos_z="0" size_x="0.06" size_y="0.06" size_z="0.873" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="leg_back_right" pos_x="0.275" pos_y="-0.78" pos_z="0" size_x="0.06" size_y="0.06" size_z="0.873" rpy="0 0 0" material="Gazebo/Wood" />
+  
+  <tablepart parent="popcorn_table" name="left_plate" pos_x="0.005" pos_y="0.76" pos_z="0.20" size_x="0.48" size_y="0.02" size_z="0.673" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="right_plate" pos_x="0.005" pos_y="-0.76" pos_z="0.20" size_x="0.48" size_y="0.02" size_z="0.673" rpy="0 0 0" material="Gazebo/Wood" />
+  
+  <tablepart parent="popcorn_table" name="lower_plate" pos_x="0.005" pos_y="0" pos_z="0.20" size_x="0.60" size_y="1.50" size_z="0.03" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="back_plate" pos_x="0.295" pos_y="0" pos_z="0.23" size_x="0.02" size_y="1.50" size_z="0.643" rpy="0 0 0" material="Gazebo/Wood" />
+   
+  <tablepart parent="popcorn_table" name="left_drawer_h" pos_x="-0.004" pos_y="0.5275" pos_z="0.628" size_x="0.58" size_y="0.445" size_z="0.03" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="left_drawer_v" pos_x="-0.004" pos_y="0.2975" pos_z="0.628" size_x="0.58" size_y="0.015" size_z="0.245" rpy="0 0 0" material="Gazebo/Wood" />
+
+  <tablepart parent="popcorn_table" name="right_drawer_h" pos_x="-0.004" pos_y="-0.5275" pos_z="0.628" size_x="0.58" size_y="0.445" size_z="0.03" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="right_drawer_v" pos_x="-0.004" pos_y="-0.2975" pos_z="0.628" size_x="0.58" size_y="0.015" size_z="0.245" rpy="0 0 0" material="Gazebo/Wood" />
+  
+  <tablepart parent="popcorn_table" name="upper_skirting_1" pos_x="-0.285" pos_y="0" pos_z="0.838" size_x="0.02" size_y="1.50" size_z="0.035" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="upper_skirting_2" pos_x="-0.265" pos_y="0" pos_z="0.818" size_x="0.02" size_y="1.50" size_z="0.02" rpy="0 0 0" material="Gazebo/Wood" />
+ 
+  <tablepart parent="popcorn_table" name="cooking_plate" pos_x="0" pos_y="0" pos_z="0.9" size_x="0.5" size_y="0.5" size_z="0.005" rpy="0 0 0" material="Custom/cooking_plate" />
+ 
+  <tablepart parent="popcorn_table" name="left_inner_plate" pos_x="0.005" pos_y="0.2975" pos_z="0.23" size_x="0.562" size_y="0.015" size_z="0.40" rpy="0 0 0" material="Gazebo/Wood" />
+  <tablepart parent="popcorn_table" name="right_inner_plate" pos_x="0.005" pos_y="-0.2975" pos_z="0.23" size_x="0.562" size_y="0.015" size_z="0.40" rpy="0 0 0" material="Gazebo/Wood" />
+ 
+  
+  
+  <drawer parent="popcorn_table" name="drawer_left" pos_x="-0.29" pos_y="0.5275" pos_z="0.663" roll="0" pitch="0" yaw="3.14159" size_x="0.54" size_y="0.435" size_z="0.17" material="Gazebo/Wood" />
+  <drawer parent="popcorn_table" name="drawer_right" pos_x="-0.29" pos_y="-0.5275" pos_z="0.663" roll="0" pitch="0" yaw="3.14159" size_x="0.54" size_y="0.435" size_z="0.17" material="Gazebo/Wood" />
+ 
+  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</robot>

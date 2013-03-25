@@ -1,0 +1,12 @@
+<launch>
+  <param name="popcorn_table_description" 
+    command="$(find xacro)/xacro.py '$(find lesson01)/models/popcorn_table/popcorn_table.urdf.xml'"
+  />
+  
+  <node name="popcorn_table" pkg="gazebo" type="spawn_model" args="-urdf -param popcorn_table_description
+    -x 1.5 -y 0 -Y 0 -model popcorn_table" respawn="false" output="screen"/>
+  
+  <node pkg="tf" type="static_transform_publisher" name="popcorn_table_publisher" args="1.5 0 0 0 0 0 /map /popcorn_table 100" />
+</launch>
+
+
