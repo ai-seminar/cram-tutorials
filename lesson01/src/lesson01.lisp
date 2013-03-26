@@ -38,3 +38,89 @@
         gazebo-perception-process-module:gazebo-perception-process-module
         point-head-process-module:point-head-process-module)
      ,@body))
+
+(def-top-level-cram-function get-mug-1 ()
+  (with-process-modules
+    (move-spine 0.2)
+    (move-arms-away)
+    (with-designators
+        ((mug (object `((desig-props:name "mug_1")))))
+      (let ((mug-perceived (cram-plan-library:perceive-object
+                            'cram-plan-library:the
+                            mug)))
+        (achieve `(cram-plan-library:object-in-hand ,mug-perceived))))))
+
+(defun move-spine (position)
+  (let ((spine-lift-trajectory (roslisp:make-msg
+                                "trajectory_msgs/JointTrajectory"
+                                (stamp header)
+                                (roslisp:ros-time)
+                                joint_names #("torso_lift_joint")
+                                points (vector
+                                        (roslisp:make-message
+                                         "trajectory_msgs/JointTrajectoryPoint"
+                                         positions (vector position)
+                                         velocities #(0)
+                                         accelerations #(0)
+                                         time_from_start 5.0)))))
+    (roslisp:ros-info (lesson01)
+                      "Moving spine to position ~a." position)
+    (pr2-manipulation-process-module::execute-torso-command
+     spine-lift-trajectory)
+    (roslisp:ros-info (lesson01)
+                      "Moving spine complete.")))
+
+(defun move-arms-away ()
+  (roslisp:ros-info (lesson01) "Moving away arms.")
+  (let* ((joint-values-left
+           (list (cons "l_shoulder_pan_joint" 1.7091906456385282d0)
+                 (cons "l_shoulder_lift_joint" -0.3516685176176528d0)
+                 (cons "l_upper_arm_roll_joint" 0.3357926749691642d0)
+                 (cons "l_elbow_flex_joint" -2.119705962915871d0)
+                 (cons "l_forearm_roll_joint" 13.518303816702831d0)
+                 (cons "l_wrist_flex_joint" -2.003336851649972d0)
+                 (cons "l_wrist_roll_joint" -22.099177425140844d0)))
+         (joint-values-right
+           (list (cons "r_shoulder_pan_joint" -1.4797042291545055d0)
+                 (cons "r_shoulder_lift_joint" -0.35204314859086017d0)
+                 (cons "r_upper_arm_roll_joint" -0.3710246292874033d0)
+                 (cons "r_elbow_flex_joint" -2.120429816472789d0)
+                 (cons "r_forearm_roll_joint" 24.297695480641856d0)
+                 (cons "r_wrist_flex_joint" -2.0051073464316054d0)
+                 (cons "r_wrist_roll_joint" -128.81492027877437d0)))
+         (msg-left
+           (roslisp:make-message
+            "trajectory_msgs/JointTrajectory"
+            (stamp header) (roslisp:ros-time)
+            joint_names (map 'vector #'car joint-values-left)
+            points (vector
+                    (roslisp:make-message
+                     "trajectory_msgs/JointTrajectoryPoint"
+                     positions (map 'vector #'cdr joint-values-left)
+                     velocities (map 'vector #'identity
+                                     (make-list (length joint-values-left)
+                                                :initial-element 0.0))
+                     accelerations (map 'vector #'identity
+                                        (make-list (length joint-values-left)
+                                                   :initial-element 0.0))
+                     time_from_start 5.0))))
+         (msg-right
+           (roslisp:make-message
+            "trajectory_msgs/JointTrajectory"
+            (stamp header) (roslisp:ros-time)
+            joint_names (map 'vector #'car joint-values-right)
+            points (vector
+                    (roslisp:make-message
+                     "trajectory_msgs/JointTrajectoryPoint"
+                     positions (map 'vector #'cdr joint-values-right)
+                     velocities (map 'vector #'identity
+                                     (make-list (length joint-values-right)
+                                                :initial-element 0.0))
+                     accelerations (map 'vector #'identity
+                                        (make-list (length joint-values-right)
+                                                   :initial-element 0.0))
+                     time_from_start 5.0)))))
+    (par
+      (pr2-manip-pm::execute-arm-trajectory :left msg-left)
+      (pr2-manip-pm::execute-arm-trajectory :right msg-right))
+    (roslisp:ros-info (lesson01) "Moving arms complete.")))
