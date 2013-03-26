@@ -25,39 +25,14 @@
 ;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ;;; POSSIBILITY OF SUCH DAMAGE.
 
-(defsystem lesson01
-  :author "Jan Winkler <winkler@cs.uni-bremen.de>"
-  :license "BSD"
-  :description "A primer in pick and place. This code explains the
-  basic structure of a pick and place scenario when using the CRAM
-  environment."
+(in-package :location-costmap)
 
-  :depends-on (roslisp
-               alexandria
-               designators-ros
-               cram-roslisp-common
-               cram-language
-               cram-reasoning
-               cram-language
-               cram-pr2-knowledge
-               cram-plan-knowledge
-               cram-environment-representation
-               pr2-manipulation-knowledge
-               pr2-manipulation-process-module
-               pr2-reachability-costmap
-               pr2-navigation-process-module
-               pr2-reachability-costmap
-               point-head-process-module
-               object-location-designators
-               physics-utils
-               occupancy-grid-costmap
-               location-costmap
-               semantic-map-costmap
-               visibility-costmap
-               gazebo-perception-process-module)
-  :components
-  ((:module "src"
-    :components
-    ((:file "package")
-     (:file "designator-config" :depends-on ("package"))
-     (:file "lesson01" :depends-on ("package" "designator-config"))))))
+(def-fact-group costmap-metadata ()
+  (<- (costmap-size 5 5))
+  (<- (costmap-origin -2.5 -2.5))
+  (<- (costmap-resolution 0.05))
+
+  (<- (costmap-padding 0.5))
+  (<- (costmap-manipulation-padding 0.5))
+  (<- (costmap-in-reach-distance 0.75))
+  (<- (costmap-reach-minimal-distance 0.3)))
