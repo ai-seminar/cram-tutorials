@@ -20,12 +20,12 @@
   <include file="$(find lesson01)/launch/spawn_objects.launch" />
 
   <!-- Load collision map and semantic map -->
-  <node name="json_prolog" pkg="json_prolog" type="json_prolog">
+  <node name="json_prolog_1" pkg="json_prolog" type="json_prolog">
     <param name="initial_package" value="lesson01" />
   </node>
   
   <node name="map_server" pkg="map_server" type="map_server" args="$(find lesson01)/map/map.yaml" />
-  <node name="json_prolog" pkg="rosprolog" type="run_with_prolog_env" args="lesson01 $(find json_prolog)/bin/json_prolog" />
+  <node name="json_prolog_2" pkg="rosprolog" type="run_with_prolog_env" args="lesson01 $(find json_prolog)/bin/json_prolog" />
   
   <include file="$(find lesson01)/launch/fake_localization.launch" />
 
