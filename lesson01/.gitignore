@@ -1,2 +1,4 @@
 build
 *~
+prolog/init.pl
+prolog/room.pl
