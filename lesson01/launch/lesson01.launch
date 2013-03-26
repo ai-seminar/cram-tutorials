@@ -25,6 +25,13 @@
   </node>
   
   <node name="map_server" pkg="map_server" type="map_server" args="$(find lesson01)/map/map.yaml" />
+  <node name="json_prolog" pkg="rosprolog" type="run_with_prolog_env" args="lesson01 $(find json_prolog)/bin/json_prolog" />
   
   <include file="$(find lesson01)/launch/fake_localization.launch" />
+
+  <!-- The navigation controller node -->
+  <include file="$(find pr2_nav_pcontroller)/nav_pcontroller.launch"/>
+  
+  <!-- The manipulation related modules -->
+  <include file="$(find pr2_manipulation_process_module)/launch/pr2_manipulation.launch"/>
 </launch>
