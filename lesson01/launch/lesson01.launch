@@ -30,8 +30,11 @@
   <include file="$(find lesson01)/launch/fake_localization.launch" />
 
   <!-- The navigation controller node -->
-  <include file="$(find pr2_nav_pcontroller)/nav_pcontroller.launch"/>
+  <include file="$(find pr2_nav_pcontroller)/nav_pcontroller.launch" />
   
   <!-- The manipulation related modules -->
-  <include file="$(find pr2_manipulation_process_module)/launch/pr2_manipulation.launch"/>
+  <include file="$(find pr2_manipulation_process_module)/launch/pr2_manipulation.launch" />
+
+  <!-- Environment representation for reasoning etc. -->
+  <include file="$(find lesson01)/launch/environment_representation.launch" />
 </launch>
