@@ -60,4 +60,5 @@
     :components
     ((:file "package")
      (:file "designator-config" :depends-on ("package"))
-     (:file "lesson01" :depends-on ("package" "designator-config"))))))
+     (:file "utils" :depends-on ("package" "designator-config"))
+     (:file "lesson01" :depends-on ("package" "designator-config" "utils"))))))
