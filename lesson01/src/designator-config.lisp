@@ -32,7 +32,7 @@
   (<- (costmap-origin -2.5 -2.5))
   (<- (costmap-resolution 0.05))
 
-  (<- (costmap-padding 0.4))
-  (<- (costmap-manipulation-padding 0.4))
-  (<- (costmap-in-reach-distance 0.55))
-  (<- (costmap-reach-minimal-distance 0.2)))
+  (<- (costmap-padding 0.60))
+  (<- (costmap-manipulation-padding 0.60))
+  (<- (costmap-in-reach-distance 0.80))
+  (<- (costmap-reach-minimal-distance 0.50)))
