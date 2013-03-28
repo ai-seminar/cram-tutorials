@@ -62,3 +62,33 @@
                                    'cram-plan-library:currently-visible
                                    mug))))
         (achieve `(cram-plan-library:object-in-hand ,mug-perceived))))))
+
+(def-top-level-cram-function displace-mug-1 ()
+  (cet:enable-fluent-tracing)
+  (init-belief-state)
+  (with-process-modules
+    (move-spine 0.2)
+    (move-arms-away)
+    (with-designators
+        ((handle-loc (location
+                      `((desig-props:pose
+                         ,(tf:make-pose
+                           (tf:make-3d-vector
+                            -0.12 0.0 0.07)
+                           (tf:euler->quaternion
+                            :ax (/ pi 2)))))))
+         (mug-handle (object
+                      `((desig-props:type desig-props:handle)
+                        (desig-props:at ,handle-loc))))
+         (mug (object `((desig-props:name "mug_1")
+                        (desig-props:handle ,mug-handle)))))
+      (let ((mug-perceived (first (cram-plan-library:perceive-object
+                                   'cram-plan-library:currently-visible
+                                   mug))))
+        (achieve `(cram-plan-library:object-in-hand ,mug-perceived))
+        (move-arms-away)
+        (with-designators ((loc-on-table
+                            (location `((desig-props:on Cupboard)
+                                        (desig-props:name "popcorn_table")))))
+          (achieve `(cram-plan-library:object-placed-at ,mug-perceived
+                                                        ,loc-on-table)))))))
