@@ -3,5 +3,5 @@
   <node name="spawn_mug_1" pkg="gazebo" type="spawn_model"
         args="-urdf -param mug_description -x 1.30 -y 0.4 -z 0.9 -model mug_1" />
   <node name="spawn_mug_2" pkg="gazebo" type="spawn_model"
-        args="-urdf -param mug_description -x 1.30 -y -0.4 -z 0.9 -model mug_2" />
+        args="-urdf -param mug_description -x 1.60 -y -0.4 -z 0.9 -model mug_2" />
 </launch>
