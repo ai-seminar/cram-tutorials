@@ -50,21 +50,21 @@
 (defun move-arms-away ()
   (roslisp:ros-info (lesson01) "Moving away arms.")
   (let* ((joint-values-left
-           (list (cons "l_shoulder_pan_joint" 1.7091906456385282d0)
+           (list (cons "l_shoulder_pan_joint" 1.1091906456385282d0)
                  (cons "l_shoulder_lift_joint" -0.3516685176176528d0)
                  (cons "l_upper_arm_roll_joint" 0.3357926749691642d0)
-                 (cons "l_elbow_flex_joint" -2.119705962915871d0)
+                 (cons "l_elbow_flex_joint" -1.919705962915871d0)
                  (cons "l_forearm_roll_joint" 13.518303816702831d0)
-                 (cons "l_wrist_flex_joint" -2.003336851649972d0)
-                 (cons "l_wrist_roll_joint" -22.099177425140844d0)))
+                 (cons "l_wrist_flex_joint" -1.403336851649972d0)
+                 (cons "l_wrist_roll_joint" -20.099177425140844d0)))
          (joint-values-right
-           (list (cons "r_shoulder_pan_joint" -1.4797042291545055d0)
+           (list (cons "r_shoulder_pan_joint" -1.1097042291545055d0)
                  (cons "r_shoulder_lift_joint" -0.35204314859086017d0)
                  (cons "r_upper_arm_roll_joint" -0.3710246292874033d0)
-                 (cons "r_elbow_flex_joint" -2.120429816472789d0)
+                 (cons "r_elbow_flex_joint" -1.920429816472789d0)
                  (cons "r_forearm_roll_joint" 24.297695480641856d0)
-                 (cons "r_wrist_flex_joint" -2.0051073464316054d0)
-                 (cons "r_wrist_roll_joint" -128.81492027877437d0)))
+                 (cons "r_wrist_flex_joint" -1.4051073464316054d0)
+                 (cons "r_wrist_roll_joint" -126.81492027877437d0)))
          (msg-left
            (roslisp:make-message
             "trajectory_msgs/JointTrajectory"
