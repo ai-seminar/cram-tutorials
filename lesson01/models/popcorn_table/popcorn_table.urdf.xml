@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="popcorn_table">
 
-<include filename="$(find unihb_lab)/defs/util_defs.xml"/>
+  <include filename="$(find lesson01)/defs/util_defs.xml"/>
 
 
   <link name="popcorn_table_link">
