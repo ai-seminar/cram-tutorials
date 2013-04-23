@@ -66,6 +66,7 @@
 (def-top-level-cram-function displace-mug-1 ()
   (cet:enable-fluent-tracing)
   (init-belief-state)
+  (add-collision-environment)
   (with-process-modules
     (move-spine 0.2)
     (move-arms-away)
@@ -85,10 +86,20 @@
       (let ((mug-perceived (first (cram-plan-library:perceive-object
                                    'cram-plan-library:currently-visible
                                    mug))))
-        (achieve `(cram-plan-library:object-in-hand ,mug-perceived))
+        (with-failure-handling
+            ((cram-plan-failures:manipulation-pose-unreachable (f)
+               (declare (ignore f))
+               (retry)))
+          (add-collision-environment)
+          (achieve `(cram-plan-library:object-in-hand ,mug-perceived)))
         (move-arms-away)
         (with-designators ((loc-on-table
                             (location `((desig-props:on Cupboard)
                                         (desig-props:name "popcorn_table")))))
-          (achieve `(cram-plan-library:object-placed-at ,mug-perceived
-                                                        ,loc-on-table)))))))
+          (with-failure-handling
+              ((cram-plan-failures:manipulation-pose-unreachable (f)
+                 (declare (ignore f))
+                 (retry)))
+            (add-collision-environment)
+            (achieve `(cram-plan-library:object-placed-at ,mug-perceived
+                                                          ,loc-on-table))))))))

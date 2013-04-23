@@ -156,3 +156,48 @@
            (crs:prolog
             `(and (btr:robot ?robot)
                   (btr:%object ?w ?robot ?pr2)) bdgs)))))
+
+(defun add-collision-environment ()
+  (let* ((curr-time (roslisp:ros-time))
+         (mug-2-pose (cram-gazebo-utilities:get-model-pose "mug_2"))
+         (popcorn-table-pose (cram-gazebo-utilities:get-model-pose "popcorn_table"))
+         (msgs (list (roslisp:make-message
+                      "arm_navigation_msgs/CollisionObject"
+                      (stamp header) curr-time
+                      (frame_id header) (tf:frame-id mug-2-pose)
+                      (id) "mug_2"
+                      (padding) 0.1
+                      (operation operation) 0
+                      (shapes) (vector
+                                (roslisp:make-message
+                                 "arm_navigation_msgs/Shape"
+                                 (type) 2
+                                 (dimensions) (vector 0.1 0.2)))
+                      (poses) (vector (tf:pose->msg
+                                       (tf:make-pose
+                                        (tf:v+ (tf:origin mug-2-pose)
+                                               (tf:make-3d-vector 0 0 0.1))
+                                        (tf:orientation mug-2-pose)))))
+                     (roslisp:make-message
+                      "arm_navigation_msgs/CollisionObject"
+                      (stamp header) curr-time
+                      (frame_id header) (tf:frame-id mug-2-pose)
+                      (id) "popcorn_table"
+                      (padding) 0.0
+                      (operation operation) 0
+                      (shapes) (vector
+                                (roslisp:make-message
+                                 "arm_navigation_msgs/Shape"
+                                 (type) 1
+                                 (dimensions) (vector 0.64 1.75 0.9)))
+                      (poses) (vector (tf:pose->msg
+                                       (tf:make-pose
+                                        (tf:v+ (tf:origin popcorn-table-pose)
+                                               (tf:make-3d-vector 0 0 0.45))
+                                        (tf:orientation popcorn-table-pose))))))))
+    (loop for msg in msgs
+          do (roslisp:publish
+              (roslisp:advertise
+               "/collision_object"
+               "arm_navigation_msgs/CollisionObject")
+              msg))))
