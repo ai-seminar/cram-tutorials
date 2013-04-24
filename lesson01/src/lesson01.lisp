@@ -89,6 +89,9 @@
         (with-failure-handling
             ((cram-plan-failures:manipulation-pose-unreachable (f)
                (declare (ignore f))
+               (retry))
+             (cram-plan-failures:location-not-reached-failure (f)
+               (declare (ignore f))
                (retry)))
           (add-collision-environment)
           (achieve `(cram-plan-library:object-in-hand ,mug-perceived)))
@@ -98,6 +101,9 @@
                                         (desig-props:name "popcorn_table")))))
           (with-failure-handling
               ((cram-plan-failures:manipulation-pose-unreachable (f)
+                 (declare (ignore f))
+                 (retry))
+               (cram-plan-failures:location-not-reached-failure (f)
                  (declare (ignore f))
                  (retry)))
             (add-collision-environment)
