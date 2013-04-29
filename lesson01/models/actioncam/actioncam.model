@@ -1,0 +1,44 @@
+<gazebo version='1.0'>
+  <model name="actioncam">
+    <link name="link">
+      <origin pose="0 0 0 0 0 0"/>
+
+      <inertial mass="0.1">
+        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+      </inertial>
+
+      <visual name="visual">
+        <origin pose="0 0 0 0 0 0"/>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </visual>
+
+      <sensor name='camera' type='camera' always_on='1' update_rate='30' visualize='true'>
+        <camera>
+          <horizontal_fov angle='1.57079633'/>
+          <image width='640' height='480' format='R8G8B8'/>
+          <clip near='0.1' far='100'/>
+        </camera>
+        <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <updateRate>30.0</updateRate>
+            <cameraName>action_camera</cameraName>
+            <frameName>action_camera_frame</frameName>
+            <CxPrime>320.5</CxPrime>
+            <Cx>320.5</Cx>
+            <Cy>240.5</Cy>
+            <hackBaseline>0</hackBaseline>
+            <focalLength>320.000101</focalLength>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+        </plugin>
+      </sensor>
+    </link>
+  </model>
+</gazebo>
