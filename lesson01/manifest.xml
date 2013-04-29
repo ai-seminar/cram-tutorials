@@ -41,4 +41,8 @@
   <depend package="pr2_description_lowres" />
   <depend package="pr2_arm_kinematics" />
   <depend package="nav_pcontroller" />
+
+  <export>
+    <gazebo plugin_path="${prefix}/gazebo/lib/" />
+  </export>
 </package>

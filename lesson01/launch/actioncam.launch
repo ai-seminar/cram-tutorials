@@ -1,0 +1,5 @@
+<launch>
+  <param name="action_cam_description" textfile="$(find lesson01)/models/actioncam/actioncam.model" />
+  <node name="spawn_action_cam" pkg="gazebo" type="spawn_model"
+        args="-gazebo -param action_cam_description -x 0 -y 0 -z 0 -model actioncam" output="screen" />
+</launch>

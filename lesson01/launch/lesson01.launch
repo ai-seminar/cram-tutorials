@@ -37,4 +37,7 @@
 
   <!-- Environment representation for reasoning etc. -->
   <include file="$(find lesson01)/launch/environment_representation.launch" />
+
+  <!-- Action Camera for viewing different angles of the environment (controlled programatically) -->
+  <include file="$(find lesson01)/launch/actioncam.launch" />
 </launch>
